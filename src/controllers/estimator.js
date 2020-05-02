@@ -23,8 +23,8 @@ router.get('/',Request.logRequest, async (req, res) => {
 router.post('/beneficiaries',Request.logRequest, async (req, res) => {
     
   const inputData = `INSERT INTO
-  beneficiaries(first_name,last_name,family_name,occupation,phone_no,address)
-  VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
+  beneficiaries(first_name,last_name,family_name,occupation,phone_no,address,coupon)
+  VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
 //console.log(req.body)
 const values = [
 req.body.fname,
@@ -32,7 +32,8 @@ req.body.lname,
 req.body.familyname,
 req.body.occupation,
 req.body.phone,
-req.body.address
+req.body.address,
+req.body.coupon
 ];
 try {
 const { rows } = await db.query(inputData, values);
