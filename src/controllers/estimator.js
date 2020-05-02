@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const moment = require ('moment')
 const Request = require('../middleware/requestlog')
-//const db = require('../db/index');
+const db = require('../db/index');
 
 
 //const responseTime = require('response-time');
