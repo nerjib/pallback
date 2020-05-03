@@ -29,19 +29,7 @@ dotenv.config();
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', '*');
-    if (req.method === 'OPTIONS') {
-      res.headers('Access-Control-Allow-Methods', 'POST, PUT, GET, DELETE');
-      return res.status(200).json({});
-    }
-    next();
-  });
-  
-  
-  const storage = multer.diskStorage({
+const storage = multer.diskStorage({
     distination: function (req, file, cb) {
       cb(null, './src');
     },
@@ -66,6 +54,18 @@ app.use((req, res, next) => {
     storage,
     fileFilter,
   });
+  
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    if (req.method === 'OPTIONS') {
+      res.headers('Access-Control-Allow-Methods', 'POST, PUT, GET, DELETE');
+      return res.status(200).json({});
+    }
+    next();
+  });
+  
   
 
   app.post('/api/v1/update2', upload.single('image'), (req, res) => {
