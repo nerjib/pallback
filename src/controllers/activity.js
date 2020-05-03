@@ -30,28 +30,6 @@ return res.status(400).send(error);
 }
 }
 
-async function UpdateWeeklyReport(req, res, imgUrl) {
-  console.log(req.body)
-  
-  
-  const createUser = `INSERT INTO
-  weeklyreportactivities(rid, imgurl)
-  VALUES ($1, $2) RETURNING *`;
-
-const values = [
-req.body.rid,
-imgUrl
-];
-try {
-const { rows } = await db.query(createUser, values);
-// console.log(rows);
-
-return res.status(201).send(rows);
-} catch (error) {
-return res.status(400).send(error);
-}
-}
-
 
 
 dotenv.config();
