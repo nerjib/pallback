@@ -72,8 +72,8 @@ app.use((req, res, next) => {
     // console.log(req.body)
       cloudinary.uploader.upload(req.file.path, function (result) {
          console.log(result.secure_url)
-        // res.send({imgurl:result.secure_url})
-        Activity.UpdateBeneficiary(req, res, result.secure_url);
+         res.send({imgurl:result.secure_url})
+      //  Activity.UpdateBeneficiary(req, res, result.secure_url);
        });
      });
      
