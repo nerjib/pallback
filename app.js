@@ -7,7 +7,10 @@ const path = require('path')
 const responseTime = require('response-time');
 const fs = require('fs')
 const app = express();
+const multer = require('multer');
+const cloudinary = require('cloudinary');
 const Estimator = require('./src/controllers/estimator')
+const Activity= require('./src/controllers/activity')
 
 const Request = require('./src/middleware/requestlog')
 
@@ -37,72 +40,43 @@ app.use((req, res, next) => {
     next();
   });
   
-  /*
-  app.use(responseTime({
-      digits: 1
-  }))
   
-app.use(responseTime((req,res,time)=>{
-//    console.log(`${req.method}  ${req.url}  ${req.statusCode}  ${time}`);
-  
-  
-if(`${req.method}`=='POST'){
-    fs.readFile('./src/db/logs.json','utf8',(err, jsonString)=>{
-        if (err){
-            console.log('read failed', err)
-            return
-        }
-        //jsonString.pu
-        //const kk={ ...jsonString, "log":"hhh"};
-       // console.log(JSON.parse(kk.log))
-
-        const logs = JSON.parse(jsonString)
-      //  console.log(Object.keys(logs).length)
-        // count = Object.keys(logs).length + 1;
-        const k= { log:`${logs.log}`+','+`${req.method}  /api/v1/${req.url}  ${req.statusCode}  ${time}`}
-     //   const kk={...logs, h:k, log: `${req.method}  ${req.url}  ${req.statusCode}  ${time}`} ;
-   //     const k2=kk.push({k:'k',l:0})
-  // console.log(kk)
-            const kk2j = JSON.stringify(k);
-            fs.writeFile('./src/db//logs.json',kk2j,err=>{
-            if (err){
-                console.log(err)
-            }console.log('success')
-
-            })
-        
-     // console.log(Object.keys(k).map(e=>k[e]))
-            //console.log(kk.log)
-       // console.log((logs.log))
-    })
-  
-  
-  
-}
-  
-  /*  const address = {
-        log: `${req.method}  ${req.url}  ${req.statusCode}  ${time}`
+  const storage = multer.diskStorage({
+    distination: function (req, file, cb) {
+      cb(null, './src');
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    },
+  });
+  cloudinary.config({
+    cloud_name: process.env.cloud_name,
+    api_key: process.env.api_key,
+    api_secret: process.env.api_secret,
+  });
+  const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/gif'||'image/png') {
+      cb(null, true);
+    } else {
+      cb(new Error('image is not gif'), false);
     }
-    const addressString = JSON.stringify(address)
-  //  console.log(addressString)
-   fs.writeFile('./src/db/logs.json', addressString, err=>{
-        if (err) {
-            console.log('error write', err)
-        }else{
-            console.log('success')
-        }
-    })
- /* fs.readFile('./src/db/logs.json','utf8',(err, jsonString)=>{
-        if (err){
-            console.log('read failed', err)
-            return
-        }
-        const logs = JSON.parse(jsonString)
-        console.log((logs.log))
-    })
-    
-}))  
-*/
+  };
+  
+  const upload = multer({
+    storage,
+    fileFilter,
+  });
+  
+
+  app.post('/api/v1/update2', upload.single('image'), (req, res) => {
+    // console.log(req.body)
+      cloudinary.uploader.upload(req.file.path, function (result) {
+         console.log(result.secure_url)
+        // res.send({imgurl:result.secure_url})
+        Activity.UpdateBeneficiary(req, res, result.secure_url);
+       });
+     });
+     
 app.get('/', function(req,res){
 res.json({
     m:'sdg'
