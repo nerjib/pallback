@@ -10,7 +10,7 @@ const app = express();
 const multer = require('multer');
 const cloudinary = require('cloudinary');
 const Estimator = require('./src/controllers/estimator')
-const Activity= require('./src/controllers/activity')
+//const Activity= require('./src/controllers/activity')
 
 const Request = require('./src/middleware/requestlog')
 
@@ -76,7 +76,7 @@ res.json({
 })
 
 app.use('/api/v1/', Estimator);
-  
+  /*
 app.post('/api/v1/update2', upload.single('image'), (req, res) => {
     // console.log(req.body)
       cloudinary.uploader.upload(req.file.path, function (result) {
@@ -86,5 +86,5 @@ app.post('/api/v1/update2', upload.single('image'), (req, res) => {
        });
      });
   
-
+    */
 module.exports = app;
