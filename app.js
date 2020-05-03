@@ -68,14 +68,6 @@ app.use((req, res, next) => {
   
   
 
-  app.post('/api/v1/update2', upload.single('image'), (req, res) => {
-    // console.log(req.body)
-      cloudinary.uploader.upload(req.file.path, function (result) {
-         console.log(result.secure_url)
-         res.send({imgurl:result.secure_url})
-      //  Activity.UpdateBeneficiary(req, res, result.secure_url);
-       });
-     });
      
 app.get('/', function(req,res){
 res.json({
@@ -85,6 +77,14 @@ res.json({
 
 app.use('/api/v1/', Estimator);
   
-
+app.post('/api/v1/update2', upload.single('image'), (req, res) => {
+    // console.log(req.body)
+      cloudinary.uploader.upload(req.file.path, function (result) {
+         console.log(result.secure_url)
+         res.send({imgurl:result.secure_url})
+      //  Activity.UpdateBeneficiary(req, res, result.secure_url);
+       });
+     });
+  
 
 module.exports = app;
