@@ -20,6 +20,27 @@ router.get('/',Request.logRequest, async (req, res) => {
   })
 })
 
+router.put('/update1/:id',Request.logRequest, async (req, res) => {
+    
+  const inputData = `UPDATE
+  beneficiaries set package_type=$1, gps=$2, time=$3 WHERE coupon=$4 RETURNING *`;
+//console.log(req.body)
+const values = [
+req.body.packageType,
+req.body.gps,
+req.body.time,
+req.params.id
+];
+try {
+const { rows } = await db.query(inputData, values);
+// console.log(rows);
+return res.status(201).send(rows);
+} catch (error) {
+return res.status(400).send(error);
+}
+});
+
+
 router.post('/beneficiaries',Request.logRequest, async (req, res) => {
     
   const inputData = `INSERT INTO
@@ -45,7 +66,6 @@ return res.status(201).send(rows);
 return res.status(400).send(error);
 }
 });
-
 router.get('/beneficiaries',Request.logRequest, async (req, res) => {
 
   const getAllQ = 'SELECT * FROM beneficiaries order by id desc';
