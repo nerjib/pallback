@@ -21,12 +21,13 @@ router.get('/',Request.logRequest, async (req, res) => {
 })
 
 router.put('/update1/:id',Request.logRequest, async (req, res) => {
-  const inputData = `UPDATE beneficiaries set package_type=$1, gps=$2, date=$3 WHERE coupon=$4`;
+  const inputData = `UPDATE beneficiaries set package_type=$1, gps=$2, date=$3, time=$4 WHERE coupon=$5`;
 //console.log(req.body)
 const values = [
 req.body.packageType,
 req.body.gps,
 req.body.time,
+moment(new Date()),
 req.params.id
 ];
 try {
