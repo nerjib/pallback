@@ -61,7 +61,7 @@ return res.status(400).send(error);
 });
 router.get('/beneficiaries',Request.logRequest, async (req, res) => {
 
-  const getAllQ = 'SELECT * FROM beneficiaries order by id desc';
+  const getAllQ = 'SELECT * FROM beneficiaries order by coupon desc';
   try {
     // const { rows } = qr.query(getAllQ);
     const { rows } = await db.query(getAllQ);
