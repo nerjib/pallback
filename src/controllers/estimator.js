@@ -39,6 +39,27 @@ return res.status(400).send(error);
 }
 });
 
+router.put('/notgiven/update',Request.logRequest, async (req, res) => {
+  const inputData = `UPDATE beneficiaries set package_type=$1,  gps=$2, time3=$3, address=$4, first_name=$5, phone_no=$6 WHERE coupon=$7`;
+//console.log(req.body)
+const values = [
+req.body.packageType,
+req.body.gps,
+req.body.time,
+req.body.address,
+req.body.fname,
+req.body.phone,
+req.body.coupon
+];
+try {
+const { rows } = await db.query(inputData, values);
+// console.log(rows);
+return res.status(201).send(rows);
+} catch (error) {
+return res.status(400).send(error);
+}
+});
+
 
 router.post('/beneficiaries',Request.logRequest, async (req, res) => {
     
