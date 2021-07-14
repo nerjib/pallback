@@ -2,7 +2,65 @@ const express = require('express');
 const moment = require ('moment')
 const router = express.Router();
 const db = require('../db/index');
+const dotenv = require('dotenv');
+const upload = require('./multer')
+const cloudinary = require('./cloudinary')
 
+
+
+
+router.post('/', upload.array('file'),  async(req, res) => {
+    const uploader = async (path) => await cloudinary.uploads(path, req.body.ward+req.body.puid);
+
+
+    if (req.method === 'POST') {
+        const urls = []
+        const files = req.files;
+        for (const file of files) {
+          const { path } = file;
+          const newPath = await uploader(path)
+          urls.push(newPath.url)
+          fs.unlinkSync(path)
+        }
+    
+   // cloudinary.uploader.upload(req.file.path, async (result)=> {
+    
+    const createUser = `INSERT INTO
+      results(puid, puname, ward,remark, apc, pdp, others, time, imgurl)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`;
+    console.log(req.body)
+    const values = [
+    req.body.puid,
+    req.body.puname,
+    req.body.ward,
+    req.body.remark,
+    req.body.apc,
+    req.body.pdp,
+    req.body.others,
+    moment(new Date()),
+    urls[0]
+      ];
+    try {
+    const { rows } = await db.query(createUser, values);
+    // console.log(rows);
+    
+    return res.status(201).send(rows);
+    } catch (error) {
+    return res.status(400).send(error);
+    }
+  
+  //  },{ resource_type: "auto", public_id: `ridafycovers/${req.body.title}` })
+
+} else {
+    res.status(405).json({
+      err: `${req.method} method not allowed`
+    })
+  }
+
+  });
+ 
+
+/*
     router.post('/', async (req, res) => {
       const createUser = `INSERT INTO
       results(puid, puname, ward,remark, apc, pdp, others, time, imgurl)
@@ -29,7 +87,7 @@ const db = require('../db/index');
     }
     
     });
-  
+  */
   
   
   router.get('/', async (req, res) => {
