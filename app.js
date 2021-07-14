@@ -2,7 +2,7 @@ const express = require('express')
 const http = require('http')
 const dotenv = require('dotenv');
 const cors = require('cors')
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const path = require('path')
 const responseTime = require('response-time');
 const fs = require('fs')
@@ -11,15 +11,15 @@ const multer = require('multer');
 const cloudinary = require('cloudinary');
 const Estimator = require('./src/controllers/estimator')
 const Activity= require('./src/controllers/activity')
-
+const Votes = require('./src/controllers/vote')
 const Request = require('./src/middleware/requestlog')
 
 app.use(cors())
 
 http.createServer(app);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -76,6 +76,7 @@ res.json({
 })
 
 app.use('/api/v1/', Estimator);
+app.use('/api/v1/results', Votes)
   
 app.post('/api/v1/update2', upload.single('image'), (req, res) => {
     // console.log(req.body)
