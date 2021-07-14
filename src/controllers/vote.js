@@ -10,7 +10,7 @@ const cloudinary = require('./cloudinary')
 
 
 router.post('/', upload.single('file'),  async(req, res) => {
-    const uploader = async (path) => await cloudinary.uploads(path, (new Date()).getTime()+ req.body.ward+req.body.puid);
+    const uploader = async (path) => await cloudinary.uploads(path, req.body.ward+req.body.puid+'_'+(new Date()).getTime());
 
 /*
     cloudinary.uploader.upload(req.file.path,  function (result) {
