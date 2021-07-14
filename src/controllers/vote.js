@@ -4,23 +4,20 @@ const router = express.Router();
 const db = require('../db/index');
 
     router.post('/', async (req, res) => {
-      await updateprojectfunc(req.body.functionality,req.body.pid)
-  
       const createUser = `INSERT INTO
-      followupreports(pid, sid, functionality,remark,cause,imgurl1,imgurl2,cordinate,gentime,time)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,$10) RETURNING *`;
+      results(puid, puname, ward,remark, apc, pdp, others, time, imgurl)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`;
     console.log(req.body)
     const values = [
-    req.body.pid,
-    req.body.mid,
-    req.body.functionality,
+    req.body.puid,
+    req.body.puname,
+    req.body.ward,
     req.body.remark,
-    req.body.cause,
-    req.body.imgurl1,
-    req.body.imgurl2,
-    req.body.cordinate,
-    req.body.gentime,
+    req.body.apc,
+    req.body.pdp,
+    req.body.others,
     moment(new Date()),
+    req.body.imgurl
       ];
     try {
     const { rows } = await db.query(createUser, values);
