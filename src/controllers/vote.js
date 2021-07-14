@@ -36,7 +36,7 @@ const db = require('../db/index');
   
   
   router.get('/', async (req, res) => {
-    const getAllQ = `SELECT * FROM results order by wards`;
+    const getAllQ = `SELECT * FROM results order by ward`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ);
