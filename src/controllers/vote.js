@@ -9,19 +9,27 @@ const cloudinary = require('./cloudinary')
 
 
 
-router.post('/', upload.array('file'),  async(req, res) => {
+router.post('/', upload.single('file'),  async(req, res) => {
     const uploader = async (path) => await cloudinary.uploads(path, req.body.ward+req.body.puid);
 
+/*
+    cloudinary.uploader.upload(req.file.path,  function (result) {
+          console.log(result.secure_url)
+          res.send({imgurl:result.secure_url})
+         Activity.UpdateBeneficiary(req, res, result.secure_url);
+        });
+
+*/
 
     if (req.method === 'POST') {
         const urls = []
-        const files = req.files;
-        for (const file of files) {
-          const { path } = file;
-          const newPath = await uploader(path)
+        const file = req.file.path;
+    //    for (const file of files) {
+       //   const { path } = file;
+          const newPath = await uploader(file)
           urls.push(newPath.url)
-          fs.unlinkSync(path)
-        }
+         // fs.unlinkSync(path)
+      //  }
     
    // cloudinary.uploader.upload(req.file.path, async (result)=> {
     
