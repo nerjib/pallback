@@ -12,6 +12,8 @@ const cloudinary = require('cloudinary');
 const Estimator = require('./src/controllers/estimator')
 const Activity= require('./src/controllers/activity')
 const Votes = require('./src/controllers/vote')
+const Punits = require('./src/controllers/punits')
+
 const Request = require('./src/middleware/requestlog')
 
 app.use(cors())
@@ -77,6 +79,8 @@ res.json({
 
 app.use('/api/v1/', Estimator);
 app.use('/api/v1/results', Votes)
+app.use('/api/v1/punits', Punits)
+
   
 app.post('/api/v1/update2', upload.single('image'), (req, res) => {
     // console.log(req.body)
