@@ -13,6 +13,8 @@ const Estimator = require('./src/controllers/estimator')
 const Activity= require('./src/controllers/activity')
 const Votes = require('./src/controllers/vote')
 const Punits = require('./src/controllers/punits')
+const Sms = require('./src/controllers/sms')
+
 
 const Request = require('./src/middleware/requestlog')
 
@@ -24,11 +26,17 @@ http.createServer(app);
 //app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(express.json({limit: '20mb'}));
+app.use(express.urlencoded({ extended: false, limit: '20mb' }));
+
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 dotenv.config();
 
 
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 const storage = multer.diskStorage({
@@ -69,6 +77,7 @@ app.use((req, res, next) => {
   });
   
   
+  
 
      
 app.get('/', function(req,res){
@@ -80,6 +89,8 @@ res.json({
 app.use('/api/v1/', Estimator);
 app.use('/api/v1/results', Votes)
 app.use('/api/v1/punits', Punits)
+app.use('/api/v1/sms', Sms )
+
 
   
 app.post('/api/v1/update2', upload.single('image'), (req, res) => {
