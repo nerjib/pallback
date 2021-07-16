@@ -10,7 +10,7 @@ const cloudinary = require('./cloudinary')
   
   
   router.get('/', async (req, res) => {
-    const getAllQ = `SELECT * FROM punits order by ward`;
+    const getAllQ = `SELECT * FROM punits order by ward, puid asc`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ);
