@@ -10,7 +10,7 @@ const cloudinary = require('./cloudinary')
 
 
 router.post('/', upload.single('file'),  async(req, res) => {
-    const uploader = async (path) => await cloudinary.uploads(path,'resultsheets', req.body.ward+req.body.puid+'_'+(new Date()).getTime());
+    const uploader = async (path) => await cloudinary.uploads(path, 'incidents' ,req.body.ward+req.body.puid+'_'+(new Date()).getTime());
 
 /*
     cloudinary.uploader.upload(req.file.path,  function (result) {
@@ -34,19 +34,16 @@ router.post('/', upload.single('file'),  async(req, res) => {
    // cloudinary.uploader.upload(req.file.path, async (result)=> {
     
     const createUser = `INSERT INTO
-      results(puid, puname, ward,remark, apc, pdp, others, time, imgurl, sender)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;
+      incidents(puid, puname, ward,incident, imgurl,time, sender)
+      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
     console.log(req.body)
     const values = [
     req.body.puid,
     req.body.puname,
     req.body.ward,
-    req.body.remark,
-    req.body.apc,
-    req.body.pdp,
-    req.body.others,
-    moment(new Date()),
+    req.body.incident,
     urls[0],
+    moment(new Date()),
     req.body.sender
       ];
     try {
@@ -100,7 +97,7 @@ router.post('/', upload.single('file'),  async(req, res) => {
   
   
   router.get('/', async (req, res) => {
-    const getAllQ = `SELECT * FROM results order by ward`;
+    const getAllQ = `SELECT * FROM incidents order by ward`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ);
@@ -114,7 +111,7 @@ router.post('/', upload.single('file'),  async(req, res) => {
   });  
 
   router.get('/byward/:ward', async (req, res) => {
-    const getAllQ = `SELECT * FROM results where ward= $1`;
+    const getAllQ = `SELECT * FROM incidents where ward= $1`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ, [req.params.ward]);

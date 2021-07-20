@@ -12,13 +12,13 @@ cloudinary.config({
 
 exports.uploads = (file, folder) => {
     return new Promise(resolve => {
-        cloudinary.uploader.upload(file, (result) => {
+        cloudinary.uploader.upload(file, foldername, (result) => {
             resolve({
                 url: result.url,
                 id: result.public_id
             })
         }, {
             resource_type: "auto",
-            public_id: `resultsheets/${folder}`        })
+            public_id: `${foldername}/${folder}`        })
     })
 }
