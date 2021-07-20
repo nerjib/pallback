@@ -10,9 +10,9 @@ cloudinary.config({
     api_secret: process.env.api_secret
 })
 
-exports.uploads = (file, folder) => {
+exports.uploads = (file, foldername,folder) => {
     return new Promise(resolve => {
-        cloudinary.uploader.upload(file, foldername, (result) => {
+        cloudinary.uploader.upload(file, (result) => {
             resolve({
                 url: result.url,
                 id: result.public_id
