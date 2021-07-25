@@ -10,10 +10,10 @@ const cloudinary = require('./cloudinary')
   
   
   router.get('/', async (req, res) => {
-    const getAllQ = `SELECT * FROM punits order by ward, puid asc`;
+    const getAllQ = `SELECT * FROM punits where remark=$1 order by ward, puid asc`;
     try {
       // const { rows } = qr.query(getAllQ);
-      const { rows } = await db.query(getAllQ);
+      const { rows } = await db.query(getAllQ,['EXISTING PU']);
       return res.status(201).send(rows);
     } catch (error) {
       if (error.routine === '_bt_check_unique') {
