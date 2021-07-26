@@ -71,8 +71,8 @@ router.post('/', upload.single('file'),  async(req, res) => {
     const { rows } = await db.query(createUser, values);
     // console.log(rows);
     if(req.body.incidenttype=='Card reader'){
-      console.log('carrrrrrrrrrrrrrrrrrrrrd')
-    await updateCardReader(req.body.cardreader,req.body.ward, req.body.puid)
+  //    console.log('carrrrrrrrrrrrrrrrrrrrrd')
+    let kk = await updateCardReader(req.body.cardreader,req.body.ward, req.body.puid)
   }
     return res.status(201).send(rows);
     } catch (error) {
