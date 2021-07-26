@@ -7,6 +7,23 @@ const upload = require('./multer')
 const cloudinary = require('./cloudinary')
 
 
+const updateCardReader = async(cr, ward, puid)=>{
+  const getAllQ = `update punits set cardreader=$1 where ward=$2 and puid=$3)`
+  try {
+    // const { rows } = qr.query(getAllQ);
+    const { rows } = await db.query(getAllQ,[cr,ward,puid]);
+   
+    return rows;
+  } catch (error) {
+    if (error.routine === '_bt_check_unique') {
+      return ({ message: 'User with that EMAIL already exist' });
+    }
+    return (`${error} jsh`);
+
+  }
+
+}
+
 
 
 router.post('/', upload.single('file'),  async(req, res) => {
@@ -34,8 +51,8 @@ router.post('/', upload.single('file'),  async(req, res) => {
    // cloudinary.uploader.upload(req.file.path, async (result)=> {
     
     const createUser = `INSERT INTO
-      incidents(puid, puname, ward,incident, imgurl,time, sender)
-      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
+      incidents(puid, puname, ward,incident, imgurl,time, sender, gentime, incidenttype, incidenttime,cardreader)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`;
     console.log(req.body)
     const values = [
     req.body.puid,
@@ -44,12 +61,18 @@ router.post('/', upload.single('file'),  async(req, res) => {
     req.body.incident,
     urls[0],
     moment(new Date()),
-    req.body.sender
+    req.body.sender, 
+    req.body.gentime,
+    req.body.incidenttype,
+    req.body.incidenttime,
+    req.body.cardreader
       ];
     try {
     const { rows } = await db.query(createUser, values);
     // console.log(rows);
-    
+    if(req.body.incidenttype=='Card reader'){
+    await updateCardReader(req.cardreader,req.body.ward, req.body.puid)
+  }
     return res.status(201).send(rows);
     } catch (error) {
     return res.status(400).send(error);
