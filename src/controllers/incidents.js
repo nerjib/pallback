@@ -8,6 +8,7 @@ const cloudinary = require('./cloudinary')
 
 
 const updateCardReader = async(cr, ward, puid)=>{
+  console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
   const getAllQ = `update punits set cardreader=$1 where ward=$2 and puid=$3)`
   try {
     // const { rows } = qr.query(getAllQ);
