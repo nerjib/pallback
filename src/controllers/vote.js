@@ -8,12 +8,12 @@ const cloudinary = require('./cloudinary')
 
 
 
-const updateResult = async(apc,pdp,others, ward, puid)=>{
+const updateResult = async(apc,pdp,others, ward, puid, accredited)=>{
   //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
-  const getAllQ = `update punits set apc=$1, pdp=$2, others=$3, updatedat=$4 where ward=$5 and puid=$6`
+  const getAllQ = `update punits set apc=$1, pdp=$2, others=$3, updatedat=$4, accredited=$5 where ward=$6 and puid=$6`
   try {
     // const { rows } = qr.query(getAllQ);
-    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),ward,puid]);
+    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),ward,accredited,puid]);
    
     return rows;
   } catch (error) {
@@ -72,7 +72,7 @@ router.post('/', upload.single('file'),  async(req, res) => {
     try {
     const { rows } = await db.query(createUser, values);
     // console.log(rows);
-     await updateResult( req.body.apc,  req.body.pdp, req.body.others,req.body.ward,req.body.puid)
+     await updateResult( req.body.apc,  req.body.pdp, req.body.others,req.body.ward,req.body.puid,req.body.accredited)
     return res.status(201).send(rows);
     } catch (error) {
     return res.status(400).send(error);
