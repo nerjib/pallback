@@ -13,7 +13,7 @@ const updateResult = async(apc,pdp,others, ward, puid, accredited)=>{
   const getAllQ = `update punits set apc=$1, pdp=$2, others=$3, updatedat=$4, accredited=$5 where ward=$6 and puid=$7`
   try {
     // const { rows } = qr.query(getAllQ);
-    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),ward,accredited,puid]);
+    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid]);
    
     return rows;
   } catch (error) {
