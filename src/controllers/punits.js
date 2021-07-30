@@ -49,7 +49,7 @@ const cloudinary = require('./cloudinary')
     }
   });  
   router.get('/others', async (req, res) => {
-    const getAllQ = `SELECT sum(apc) FROM others`;
+    const getAllQ = `SELECT sum(others) FROM punits`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ);
