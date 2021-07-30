@@ -9,10 +9,10 @@ const cloudinary = require('./cloudinary')
 
 const updateCardReader = async(cr, ward, puid)=>{
   //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
-  const getAllQ = `update punits set cardreader=$1 where ward=$2 and puid=$3`
+  const getAllQ = `update punits set cardreader=$1, status=$4 where ward=$2 and puid=$3`
   try {
     // const { rows } = qr.query(getAllQ);
-    const { rows } = await db.query(getAllQ,[cr,ward,puid]);
+    const { rows } = await db.query(getAllQ,[cr,ward,puid,'ongoing']);
    
     return rows;
   } catch (error) {
@@ -24,6 +24,24 @@ const updateCardReader = async(cr, ward, puid)=>{
   }
 
 }
+const updateStatus = async(ward, puid)=>{
+  //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
+  const getAllQ = `update punits set  status=$1 where ward=$2 and puid=$3`
+  try {
+    // const { rows } = qr.query(getAllQ);
+    const { rows } = await db.query(getAllQ,['ongoing',ward,puid]);
+   
+    return rows;
+  } catch (error) {
+    if (error.routine === '_bt_check_unique') {
+      return ({ message: 'User with that EMAIL already exist' });
+    }
+    return (`${error} jsh`);
+
+  }
+
+}
+
 
 
 
@@ -71,6 +89,9 @@ router.post('/', upload.single('file'),  async(req, res) => {
     try {
     const { rows } = await db.query(createUser, values);
     // console.log(rows);
+    if(req.body.incidenttype !='Yet to start'){
+      await updateStatus(req.body.ward,req.body.puid)
+    }
     if(req.body.incidenttype=='Card reader'){
   //    console.log('carrrrrrrrrrrrrrrrrrrrrd')
     let kk = await updateCardReader(req.body.cardreader,req.body.ward, req.body.puid)
