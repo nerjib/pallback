@@ -26,6 +26,23 @@ const updateResult = async(apc,pdp,others, ward, puid, accredited,resulturl)=>{
 
 }
 
+const updateCollationResult = async(apc,pdp,others, ward, puid, accredited,resulturl)=>{
+  //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
+  const getAllQ = `update cunits set apc=$1, pdp=$2, others=$3, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7`
+  try {
+    // const { rows } = qr.query(getAllQ);
+    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl]);
+   
+    return rows;
+  } catch (error) {
+    if (error.routine === '_bt_check_unique') {
+      return ({ message: 'User with that EMAIL already exist' });
+    }
+    return (`${error} jsh`);
+
+  }
+
+}
 
 
 router.post('/', upload.single('file'),  async(req, res) => {
@@ -87,6 +104,69 @@ router.post('/', upload.single('file'),  async(req, res) => {
   }
 
   });
+
+
+
+  router.post('/collation', upload.single('file'),  async(req, res) => {
+    const uploader = async (path) => await cloudinary.uploads(path,'collation', req.body.ward+req.body.puid+'_'+(new Date()).getTime());
+
+/*
+    cloudinary.uploader.upload(req.file.path,  function (result) {
+          console.log(result.secure_url)
+          res.send({imgurl:result.secure_url})
+         Activity.UpdateBeneficiary(req, res, result.secure_url);
+        });
+
+*/
+
+    if (req.method === 'POST') {
+        const urls = []
+        const file = req.file.path;
+    //    for (const file of files) {
+       //   const { path } = file;
+          const newPath = await uploader(file)
+          urls.push(newPath.url)
+         // fs.unlinkSync(path)
+      //  }
+    
+   // cloudinary.uploader.upload(req.file.path, async (result)=> {
+    
+    const createUser = `INSERT INTO
+      collationresults(puid, puname, ward,remark, apc, pdp, others, time, imgurl, sender, accredited)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11) RETURNING *`;
+    console.log(req.body)
+    const values = [
+    req.body.puid,
+    req.body.puname,
+    req.body.ward,
+    req.body.remark,
+    req.body.apc,
+    req.body.pdp,
+    req.body.others,
+    moment(new Date()),
+    urls[0],
+    req.body.sender,
+    req.body.accredited
+      ];
+    try {
+    const { rows } = await db.query(createUser, values);
+    // console.log(rows);
+     await updateCollationResult( req.body.apc,  req.body.pdp, req.body.others,req.body.ward,req.body.puid,req.body.accredited,urls[0])
+    return res.status(201).send(rows);
+    } catch (error) {
+    return res.status(400).send(error);
+    }
+  
+  //  },{ resource_type: "auto", public_id: `ridafycovers/${req.body.title}` })
+
+} else {
+    res.status(405).json({
+      err: `${req.method} method not allowed`
+    })
+  }
+
+  });
+ 
  
 
 /*
