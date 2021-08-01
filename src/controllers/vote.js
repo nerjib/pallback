@@ -200,7 +200,7 @@ router.post('/', upload.single('file'),  async(req, res) => {
   
   
   router.get('/', async (req, res) => {
-    const getAllQ = `SELECT * FROM results order by ward`;
+    const getAllQ = `SELECT * FROM results order by id desc`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ);
@@ -212,6 +212,36 @@ router.post('/', upload.single('file'),  async(req, res) => {
       return res.status(400).send(`${error} jsh`);
     }
   });  
+
+  router.get('/cunits', async (req, res) => {
+    const getAllQ = `SELECT * FROM cunits order by ward`;
+    try {
+      // const { rows } = qr.query(getAllQ);
+      const { rows } = await db.query(getAllQ);
+      return res.status(201).send(rows);
+    } catch (error) {
+      if (error.routine === '_bt_check_unique') {
+        return res.status(400).send({ message: 'User with that EMAIL already exist' });
+      }
+      return res.status(400).send(`${error} jsh`);
+    }
+  });  
+
+  
+  router.get('/cresults', async (req, res) => {
+    const getAllQ = `SELECT * FROM collationresults order by id desc`;
+    try {
+      // const { rows } = qr.query(getAllQ);
+      const { rows } = await db.query(getAllQ);
+      return res.status(201).send(rows);
+    } catch (error) {
+      if (error.routine === '_bt_check_unique') {
+        return res.status(400).send({ message: 'User with that EMAIL already exist' });
+      }
+      return res.status(400).send(`${error} jsh`);
+    }
+  });  
+
 
   router.get('/byward/:ward', async (req, res) => {
     const getAllQ = `SELECT * FROM results where ward= $1`;
