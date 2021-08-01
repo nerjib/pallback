@@ -76,6 +76,21 @@ const cloudinary = require('./cloudinary')
   });  
 
 
+  router.get('/wards/:ward', async (req, res) => {
+    const getAllQ = `SELECT sum(apc) as apc, sum(pdp) as pdp, sum(others) as others, sum(accredited) as accredited FROM punits where ward=$1`;
+    try {
+      // const { rows } = qr.query(getAllQ);
+      const { rows } = await db.query(getAllQ,[req.params.ward]);
+      return res.status(201).send(rows);
+    } catch (error) {
+      if (error.routine === '_bt_check_unique') {
+        return res.status(400).send({ message: 'User with that EMAIL already exist' });
+      }
+      return res.status(400).send(`${error} jsh`);
+    }
+  });  
+  
+
   router.post('/send', async (req, res) => {
     /*   const {
            to,
