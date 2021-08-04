@@ -158,7 +158,7 @@ router.post('/', upload.single('file'),  async(req, res) => {
     // console.log(rows);
     let other = parseInt(req.body.prp)+parseInt(req.body.ypp)+parseInt(req.body.invalid)
 
-     await updateCollationResult( req.body.apc,  req.body.pdp,others,req.body.ypp,req.body.prp,req.body.invalid,req.body.ward,req.body.puid,req.body.accredited,urls[0])
+     await updateCollationResult( req.body.apc,  req.body.pdp,other,req.body.ypp,req.body.prp,req.body.invalid,req.body.ward,req.body.puid,req.body.accredited,urls[0])
     return res.status(201).send(rows);
     } catch (error) {
     return res.status(400).send(error);
