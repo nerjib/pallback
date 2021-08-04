@@ -8,12 +8,12 @@ const cloudinary = require('./cloudinary')
 
 
 
-const updateResult = async(apc,pdp,others, ward, puid, accredited,resulturl)=>{
+const updateResult = async(apc,pdp,ypp,prp,invalid,others, ward, puid, accredited,resulturl)=>{
   //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
-  const getAllQ = `update punits set apc=$1, pdp=$2, others=$3, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7`
+  const getAllQ = `update punits set apc=$1, pdp=$2,ypp=$10, prp=$11, invalid=$12, others=$3, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7`
   try {
     // const { rows } = qr.query(getAllQ);
-    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl]);
+    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl,ypp,prp,invalid]);
    
     return rows;
   } catch (error) {
@@ -26,12 +26,12 @@ const updateResult = async(apc,pdp,others, ward, puid, accredited,resulturl)=>{
 
 }
 
-const updateCollationResult = async(apc,pdp,others, ward, puid, accredited,resulturl)=>{
+const updateCollationResult = async(apc,pdp,others,ypp,prp,invalid, ward, puid, accredited,resulturl)=>{
   //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
-  const getAllQ = `update cunits set apc=$1, pdp=$2, others=$3, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7`
+  const getAllQ = `update cunits set apc=$1, pdp=$2, others=$3,ypp=$10, prp=$11, invalid=$12, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7`
   try {
     // const { rows } = qr.query(getAllQ);
-    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl]);
+    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl,ypp,prp,invalid]);
    
     return rows;
   } catch (error) {
@@ -70,8 +70,8 @@ router.post('/', upload.single('file'),  async(req, res) => {
    // cloudinary.uploader.upload(req.file.path, async (result)=> {
     
     const createUser = `INSERT INTO
-      results(puid, puname, ward,remark, apc, pdp, others, time, imgurl, sender, accredited)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11) RETURNING *`;
+      results(puid, puname, ward,remark, apc, pdp, time, imgurl, sender, accredited, prp, ypp, invalid)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11, $12, $13) RETURNING *`;
     console.log(req.body)
     const values = [
     req.body.puid,
@@ -80,16 +80,19 @@ router.post('/', upload.single('file'),  async(req, res) => {
     req.body.remark,
     req.body.apc,
     req.body.pdp,
-    req.body.others,
     moment(new Date()),
     urls[0],
     req.body.sender,
-    req.body.accredited
+    req.body.accredited,
+    req.body.prp,
+    req.body.ypp,
+    req.body.invalid
       ];
     try {
     const { rows } = await db.query(createUser, values);
     // console.log(rows);
-     await updateResult( req.body.apc,  req.body.pdp, req.body.others,req.body.ward,req.body.puid,req.body.accredited,urls[0])
+    let other = req.body.prp+req.body.ypp+req.body.invalid
+     await updateResult( req.body.apc,  req.body.pdp,req.body.ypp,req.body.prp,req.body.invalid, other,req.body.ward,req.body.puid,req.body.accredited,urls[0])
     return res.status(201).send(rows);
     } catch (error) {
     return res.status(400).send(error);
@@ -132,8 +135,8 @@ router.post('/', upload.single('file'),  async(req, res) => {
    // cloudinary.uploader.upload(req.file.path, async (result)=> {
     
     const createUser = `INSERT INTO
-      collationresults(puid, puname, ward,remark, apc, pdp, others, time, imgurl, sender, accredited)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11) RETURNING *`;
+      collationresults(puid, puname, ward,remark, apc, pdp,  time, imgurl, sender, accredited,prp,ypp,invalid)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,$12,$13) RETURNING *`;
     console.log(req.body)
     const values = [
     req.body.puid,
@@ -142,16 +145,20 @@ router.post('/', upload.single('file'),  async(req, res) => {
     req.body.remark,
     req.body.apc,
     req.body.pdp,
-    req.body.others,
     moment(new Date()),
     urls[0],
     req.body.sender,
-    req.body.accredited
+    req.body.accredited,
+    req.body.prp,
+    req.body.ypp,
+    req.body.invalid
       ];
     try {
     const { rows } = await db.query(createUser, values);
     // console.log(rows);
-     await updateCollationResult( req.body.apc,  req.body.pdp, req.body.others,req.body.ward,req.body.puid,req.body.accredited,urls[0])
+    let other = req.body.prp+req.body.ypp+req.body.invalid
+
+     await updateCollationResult( req.body.apc,  req.body.pdp,req.body.ypp,req.body.prp,req.body.invalid,req.body.ward,req.body.puid,req.body.accredited,urls[0])
     return res.status(201).send(rows);
     } catch (error) {
     return res.status(400).send(error);
