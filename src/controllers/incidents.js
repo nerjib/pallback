@@ -144,7 +144,7 @@ router.post('/', upload.single('file'),  async(req, res) => {
   
   
   router.get('/', async (req, res) => {
-    const getAllQ = `SELECT * FROM incidents order by ward`;
+    const getAllQ = `SELECT * FROM incidents order by id desc`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ);
