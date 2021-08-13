@@ -187,10 +187,10 @@ router.post('/', upload.single('file'),  async(req, res) => {
   });  
 
   router.get('/supervisors', async (req, res) => {
-    const getAllQ = `SELECT distinct sender, puid, puname, ward FROM incidents order by ward asc, puid asc`;
+    const getAllQ = `SELECT distinct sender, puid, puname, ward FROM supervisorss order by ward asc, puid asc`;
     try {
       // const { rows } = qr.query(getAllQ);
-      const { rows } = await db.query(getAllQ, [req.params.ward,req.params.puid]);
+      const { rows } = await db.query(getAllQ);
       return res.status(201).send(rows);
     } catch (error) {
       if (error.routine === '_bt_check_unique') {
