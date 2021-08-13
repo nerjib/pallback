@@ -279,7 +279,7 @@ router.post('/', upload.single('file'),  async(req, res) => {
 
 
   router.get('/pu/:ward/:puid', async (req, res) => {
-    const getAllQ = `SELECT * FROM results where ward=$1 && puid=$2`;
+    const getAllQ = `SELECT * FROM results where ward=$1 and puid=$2`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ, [req.params.ward, req.params.puid]);
