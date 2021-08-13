@@ -171,4 +171,19 @@ router.post('/', upload.single('file'),  async(req, res) => {
     }
   });  
 
+
+  router.get('/pu/:ward/:puid', async (req, res) => {
+    const getAllQ = `SELECT * FROM incidents where ward= $1 && puid= $2`;
+    try {
+      // const { rows } = qr.query(getAllQ);
+      const { rows } = await db.query(getAllQ, [req.params.ward,req.params.puid]);
+      return res.status(201).send(rows);
+    } catch (error) {
+      if (error.routine === '_bt_check_unique') {
+        return res.status(400).send({ message: 'User with that EMAIL already exist' });
+      }
+      return res.status(400).send(`${error} jsh`);
+    }
+  });  
+
   module.exports = router;

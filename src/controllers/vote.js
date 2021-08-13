@@ -158,7 +158,7 @@ router.post('/', upload.single('file'),  async(req, res) => {
     // console.log(rows);
     let other = parseInt(req.body.prp)+parseInt(req.body.ypp)+parseInt(req.body.invalid)
 
-     await updateCollationResult( req.body.apc,  req.body.pdp,other,req.body.ypp,req.body.prp,req.body.invalid,req.body.ward,req.body.puid,req.body.accredited,urls[0])
+     await updateCollationResult( req.body.apc, req.body.pdp,other,req.body.ypp,req.body.prp,req.body.invalid,req.body.ward,req.body.puid,req.body.accredited,urls[0])
     return res.status(201).send(rows);
     } catch (error) {
     return res.status(400).send(error);
@@ -276,5 +276,20 @@ router.post('/', upload.single('file'),  async(req, res) => {
       return res.status(400).send(`${error} jsh`);
     }
   });  
+
+
+  router.get('/pu/:ward/:puid', async (req, res) => {
+    const getAllQ = `SELECT * FROM results where ward= $1 && puid= $2`;
+    try {
+      // const { rows } = qr.query(getAllQ);
+      const { rows } = await db.query(getAllQ, [req.params.ward, req.params.puid]);
+      return res.status(201).send(rows);
+    } catch (error) {
+      if (error.routine === '_bt_check_unique') {
+        return res.status(400).send({ message: 'User with that EMAIL already exist' });
+      }
+      return res.status(400).send(`${error} jsh`);
+    }
+  });
 
   module.exports = router;
