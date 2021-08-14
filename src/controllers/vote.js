@@ -268,7 +268,7 @@ router.post('/', upload.single('file'),  async(req, res) => {
     try {
     //  let ward = req.params.ward='GURE'?'GURE/KAHUGU':req.params.ward
       // const { rows } = qr.query(getAllQ);
-      if(req.params.ward=='GURE'){
+      if(req.params.ward='GURE'){
       const { rows } = await db.query(getAllQ,['GURE/KAHUGU']);
       return res.status(201).send(rows);}
       else{
