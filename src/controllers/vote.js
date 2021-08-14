@@ -266,8 +266,9 @@ router.post('/', upload.single('file'),  async(req, res) => {
   router.get('/byward/:ward', async (req, res) => {
     const getAllQ = `SELECT * FROM results where ward= $1`;
     try {
+      let ward = req.params.ward='GURE'?'GURE/KAHUGU':req.params.ward
       // const { rows } = qr.query(getAllQ);
-      const { rows } = await db.query(getAllQ, [req.params.ward]);
+      const { rows } = await db.query(getAllQ, ward);
       return res.status(201).send(rows);
     } catch (error) {
       if (error.routine === '_bt_check_unique') {
