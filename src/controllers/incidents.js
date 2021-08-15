@@ -45,7 +45,7 @@ const updateStatus = async(ward, puid)=>{
 
 
 
-router.post('/', upload.single('file'),  async(req, res) => {
+router.post('/a', upload.single('file'),  async(req, res) => {
     const uploader = async (path) => await cloudinary.uploads(path, 'incidents' ,req.body.ward+req.body.puid+'_'+(new Date()).getTime());
 
 /*
