@@ -284,6 +284,23 @@ router.post('/', upload.single('file'),  async(req, res) => {
   });  
 
 
+  router.get('/gure', async (req, res) => {
+    const getAllQ = `SELECT * FROM results where ward= $1`;
+    try {
+    //  let ward = req.params.ward='GURE'?'GURE/KAHUGU':req.params.ward
+      // const { rows } = qr.query(getAllQ);
+      const { rows } = await db.query(getAllQ,['GURE/KAHUGU']);
+      return res.status(201).send(rows);
+     
+    } catch (error) {
+      if (error.routine === '_bt_check_unique') {
+        return res.status(400).send({ message: 'User with that EMAIL already exist' });
+      }
+      return res.status(400).send(`${error} jsh`);
+    }
+  });  
+
+
   router.get('/pu/:ward/:puid', async (req, res) => {
     const getAllQ = `SELECT * FROM results where ward=$1 and puid=$2`;
     try {
