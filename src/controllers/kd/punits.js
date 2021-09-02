@@ -24,7 +24,7 @@ const cloudinary = require('../cloudinary')
   });  
 
   router.get('/logdet', async (req, res) => {
-    const getAllQ = `SELECT distinct pword, uname,ward,lga FROM kdpunits`;
+    const getAllQ = `SELECT distinct pword, uname,ward,lga FROM kdpunits order by lga asc, ward asc`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ);
