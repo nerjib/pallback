@@ -17,6 +17,7 @@ const Sms = require('./src/controllers/sms')
 const Voice = require('./src/controllers/voice')
 const Incidents = require('./src/controllers/incidents')
 
+const KDPunits = require('./src/controllers/kd/punits')
 
 
 
@@ -93,6 +94,8 @@ res.json({
 app.use('/api/v1/', Estimator);
 app.use('/api/v1/results', Votes)
 app.use('/api/v1/punits', Punits)
+app.use('/api/v1/kdpunits', KDPunits)
+
 app.use('/api/v1/sms', Sms )
 app.use('/api/v1/voice', Voice )
 app.use('/api/v1/incidents', Incidents )
