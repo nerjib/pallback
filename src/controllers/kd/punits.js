@@ -13,7 +13,7 @@ const cloudinary = require('../cloudinary')
     const getAllQ = `SELECT * FROM kdpunits  order by ward, puid asc`;
     try {
       // const { rows } = qr.query(getAllQ);
-      const { rows } = await db.query(getAllQ,['EXISTING PU']);
+      const { rows } = await db.query(getAllQ);
       return res.status(201).send(rows);
     } catch (error) {
       if (error.routine === '_bt_check_unique') {
