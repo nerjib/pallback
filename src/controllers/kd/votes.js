@@ -10,7 +10,7 @@ const cloudinary = require('../cloudinary')
 
 const updateResult = async(apc,pdp,ypp,prp,invalid,others, ward, puid, accredited,resulturl,lga)=>{
   //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
-  const getAllQ = `update kdpunits set apc=$1, pdp=$2,ypp=$10, prp=$11, invalid=$12, others=$3, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7 and lga=$8`
+  const getAllQ = `update kdpunits set apc=$1, pdp=$2,ypp=$10, prp=$11, invalid=$12, others=$3, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7 and lga=$13`
   try {
     // const { rows } = qr.query(getAllQ);
     const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl,ypp,prp,invalid,lga]);
@@ -28,7 +28,7 @@ const updateResult = async(apc,pdp,ypp,prp,invalid,others, ward, puid, accredite
 
 const updateCollationResult = async(apc,pdp,others,ypp,prp,invalid, ward, puid, accredited,resulturl,lga)=>{
   //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
-  const getAllQ = `update kdcunits set apc=$1, pdp=$2, others=$3,ypp=$10, prp=$11, invalid=$12, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7 and lga=$8`
+  const getAllQ = `update kdcunits set apc=$1, pdp=$2, others=$3,ypp=$10, prp=$11, invalid=$12, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7 and lga=$13`
   try {
     // const { rows } = qr.query(getAllQ);
     const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl,ypp,prp,invalid,lga]);
