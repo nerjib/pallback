@@ -151,7 +151,7 @@ const cloudinary = require('../cloudinary')
     try {
       // const { rows } = qr.query(getAllQ);
      
-        const { rows } = await db.query(getAllQ,[req.params.ward]);
+        const { rows } = await db.query(getAllQ,[req.params.lga]);
         return res.status(201).send(rows);
      
       
