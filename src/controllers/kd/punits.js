@@ -54,7 +54,7 @@ const cloudinary = require('../cloudinary')
   });  
 
   router.get('/lgabyward/:lga', async (req, res) => {
-    const getAllQ = `SELECT  sum (apc) as apc, sum(pdp) as pdp, sum(others) as others, ward FROM kdpunits where lga=$1 group by ward,  order by ward asc`;
+    const getAllQ = `SELECT  sum (apc) as apc, sum(pdp) as pdp, sum(others) as others, ward FROM kdpunits where lga=$1 group by ward  order by ward asc`;
     try {
       // const { rows } = qr.query(getAllQ);
       const { rows } = await db.query(getAllQ, [req.params.lga]);
