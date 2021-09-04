@@ -8,6 +8,34 @@ const cloudinary = require('../cloudinary')
 
 
   
+router.get('/allpu/:lga', async (req, res) => {
+    const getAllQ = `SELECT count(*) FROM kdpunits where lga=$1`;
+    try {
+      // const { rows } = qr.query(getAllQ);
+      const { rows } = await db.query(getAllQ,[req.params.lga]);
+      return res.status(201).send(rows);
+    } catch (error) {
+      if (error.routine === '_bt_check_unique') {
+        return res.status(400).send({ message: 'User with that EMAIL already exist' });
+      }
+      return res.status(400).send(`${error} jsh`);
+    }
+  });  
+
+  router.get('/votedpu/:lga/:type', async (req, res) => {
+    const getAllQ = `SELECT count(*) FROM kdpunits where lga=$1 and type=$2 and apc !=$3`;
+    try {
+      // const { rows } = qr.query(getAllQ);
+      const { rows } = await db.query(getAllQ,[req.params.lga,req.params.type]);
+      return res.status(201).send(rows);
+    } catch (error) {
+      if (error.routine === '_bt_check_unique') {
+        return res.status(400).send({ message: 'User with that EMAIL already exist' });
+      }
+      return res.status(400).send(`${error} jsh`);
+    }
+  });  
+
   
   router.get('/', async (req, res) => {
     const getAllQ = `SELECT * FROM kdpunits  order by lga asc, ward asc, puid asc`;
