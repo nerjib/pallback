@@ -9,10 +9,10 @@ const cloudinary = require('../cloudinary')
 
   
 router.get('/allpu/:lga', async (req, res) => {
-    const getAllQ = `SELECT count(*) FROM kdpunits where lga=$1`;
+    const getAllQ = `SELECT count(*) FROM kdpunits where lga=$1 and type=$2`;
     try {
       // const { rows } = qr.query(getAllQ);
-      const { rows } = await db.query(getAllQ,[req.params.lga]);
+      const { rows } = await db.query(getAllQ,[req.params.lga, 'PRESIDENTIAL']);
       return res.status(201).send(rows);
     } catch (error) {
       if (error.routine === '_bt_check_unique') {
