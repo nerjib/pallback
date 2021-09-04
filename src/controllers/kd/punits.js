@@ -53,11 +53,11 @@ const cloudinary = require('../cloudinary')
     }
   });  
 
-  router.get('/lgabyward/:lga', async (req, res) => {
-    const getAllQ = `SELECT  sum (apc) as apc, sum(pdp) as pdp, sum(others) as others, ward FROM kdpunits where lga=$1 group by ward  order by ward asc`;
+  router.get('/lgabyward/:lga/:type', async (req, res) => {
+    const getAllQ = `SELECT  sum (apc) as apc, sum(pdp) as pdp, sum(others) as others, ward FROM kdpunits where lga=$1 and type=$2 group by ward  order by ward asc`;
     try {
       // const { rows } = qr.query(getAllQ);
-      const { rows } = await db.query(getAllQ, [req.params.lga]);
+      const { rows } = await db.query(getAllQ, [req.params.lga, req.paramsms.type]);
       return res.status(201).send(rows);
     } catch (error) {
       if (error.routine === '_bt_check_unique') {
@@ -177,12 +177,12 @@ const cloudinary = require('../cloudinary')
   });  
   
 
-  router.get('/lga/:lga', async (req, res) => {
-    const getAllQ = `SELECT sum(apc) as apc, sum(pdp) as pdp, sum(others) as others, sum(accredited) as accredited FROM kdpunits where lga=$1`;
+  router.get('/lga/:lga/:type', async (req, res) => {
+    const getAllQ = `SELECT sum(apc) as apc, sum(pdp) as pdp, sum(others) as others, sum(accredited) as accredited FROM kdpunits where lga=$1 and type=$2`;
     try {
       // const { rows } = qr.query(getAllQ);
      
-        const { rows } = await db.query(getAllQ,[req.params.lga]);
+        const { rows } = await db.query(getAllQ,[req.params.lga, req.params.type]);
         return res.status(201).send(rows);
      
       
