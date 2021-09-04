@@ -8,12 +8,12 @@ const cloudinary = require('../cloudinary')
 
 
 
-const updateResult = async(apc,pdp,ypp,prp,invalid,others, ward, puid, accredited,resulturl,lga)=>{
+const updateResult = async(apc,pdp,ypp,prp,invalid,others, ward, puid, accredited,resulturl,lga,type)=>{
   //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
-  const getAllQ = `update kdpunits set apc=$1, pdp=$2,ypp=$10, prp=$11, invalid=$12, others=$3, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7 and lga=$13`
+  const getAllQ = `update kdpunits set apc=$1, pdp=$2,ypp=$10, prp=$11, invalid=$12, others=$3, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7 and lga=$13 and type=$14`
   try {
     // const { rows } = qr.query(getAllQ);
-    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl,ypp,prp,invalid,lga]);
+    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl,ypp,prp,invalid,lga, type]);
    
     return rows;
   } catch (error) {
@@ -26,12 +26,12 @@ const updateResult = async(apc,pdp,ypp,prp,invalid,others, ward, puid, accredite
 
 }
 
-const updateCollationResult = async(apc,pdp,others,ypp,prp,invalid, ward, puid, accredited,resulturl,lga)=>{
+const updateCollationResult = async(apc,pdp,others,ypp,prp,invalid, ward, puid, accredited,resulturl,lga, type)=>{
   //console.log(puid+' yyyyy '+ ward +' gggg '+ cr)
-  const getAllQ = `update kdcunits set apc=$1, pdp=$2, others=$3,ypp=$10, prp=$11, invalid=$12, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7 and lga=$13`
+  const getAllQ = `update kdcunits set apc=$1, pdp=$2, others=$3,ypp=$10, prp=$11, invalid=$12, updatedat=$4, accredited=$5, status=$8, resulturl=$9 where ward=$6 and puid=$7 and lga=$13 and type=$14`
   try {
     // const { rows } = qr.query(getAllQ);
-    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl,ypp,prp,invalid,lga]);
+    const { rows } = await db.query(getAllQ,[apc,pdp,others,moment(new Date()),accredited,ward,puid,'completed',resulturl,ypp,prp,invalid,lga, type]);
    
     return rows;
   } catch (error) {
@@ -70,8 +70,8 @@ router.post('/', upload.single('file'),  async(req, res) => {
    // cloudinary.uploader.upload(req.file.path, async (result)=> {
     
     const createUser = `INSERT INTO
-      kdresults(puid, puname, ward,remark, apc, pdp, time, imgurl, sender, accredited, prp, ypp, invalid,lga)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11, $12, $13, $14) RETURNING *`;
+      kdresults(puid, puname, ward,remark, apc, pdp, time, imgurl, sender, accredited, prp, ypp, invalid,lga,type,year)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11, $12, $13, $14, $15, $16) RETURNING *`;
     console.log(req.body)
     const values = [
     req.body.puid,
@@ -87,13 +87,15 @@ router.post('/', upload.single('file'),  async(req, res) => {
     req.body.prp,
     req.body.ypp,
     req.body.invalid,
-    req.body.lga
+    req.body.lga,
+    req.body.type,
+    req.body.year
       ];
     try {
     const { rows } = await db.query(createUser, values);
     // console.log(rows);
     let other = parseInt(req.body.prp)+parseInt(req.body.ypp)+parseInt(req.body.invalid)
-     await updateResult( req.body.apc,  req.body.pdp,req.body.ypp,req.body.prp,req.body.invalid, other,req.body.ward,req.body.puid,req.body.accredited,urls[0],req.body.lga)
+     await updateResult( req.body.apc,  req.body.pdp,req.body.ypp,req.body.prp,req.body.invalid, other,req.body.ward,req.body.puid,req.body.accredited,urls[0],req.body.lga,req.body.type)
     return res.status(201).send(rows);
     } catch (error) {
     return res.status(400).send(error);
@@ -136,8 +138,8 @@ router.post('/', upload.single('file'),  async(req, res) => {
    // cloudinary.uploader.upload(req.file.path, async (result)=> {
     
     const createUser = `INSERT INTO
-      kdcollationresults(puid, puname, ward,remark, apc, pdp,  time, imgurl, sender, accredited,prp,ypp,invalid,lga)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,$12,$13,$14) RETURNING *`;
+      kdcollationresults(puid, puname, ward,remark, apc, pdp,  time, imgurl, sender, accredited,prp,ypp,invalid,lga,type,year)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,$12,$13,$14,$15,$16) RETURNING *`;
     console.log(req.body)
     const values = [
     req.body.puid,
@@ -153,14 +155,16 @@ router.post('/', upload.single('file'),  async(req, res) => {
     req.body.prp,
     req.body.ypp,
     req.body.invalid,
-    req.body.lga
+    req.body.lga,
+    req.body.type,
+    req.body.year
       ];
     try {
     const { rows } = await db.query(createUser, values);
     // console.log(rows);
     let other = parseInt(req.body.prp)+parseInt(req.body.ypp)+parseInt(req.body.invalid)
 
-     await updateCollationResult( req.body.apc, req.body.pdp,other,req.body.ypp,req.body.prp,req.body.invalid,req.body.ward,req.body.puid,req.body.accredited,urls[0],req.body.lga)
+     await updateCollationResult( req.body.apc, req.body.pdp,other,req.body.ypp,req.body.prp,req.body.invalid,req.body.ward,req.body.puid,req.body.accredited,urls[0],req.body.lga,req.body.type)
     return res.status(201).send(rows);
     } catch (error) {
     return res.status(400).send(error);
