@@ -21,6 +21,7 @@ const KDPunits = require('./src/controllers/kd/punits')
 const KDVotes = require('./src/controllers/kd/votes')
 const KDIncidents = require('./src/controllers/kd/incidents')
 
+const BAUPunits = require('./src/controllers/bau/punits')
 
 
 
@@ -100,6 +101,9 @@ app.use('/api/v1/punits', Punits)
 app.use('/api/v1/kdpunits', KDPunits)
 app.use('/api/v1/kdresults', KDVotes)
 app.use('/api/v1/kdincidents', KDIncidents )
+
+app.use('/api/v1/baupunits', BAUPunits)
+
 
 app.use('/api/v1/sms', Sms )
 app.use('/api/v1/voice', Voice )
